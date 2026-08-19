@@ -1,8 +1,7 @@
 import Config
 
-# Where the Python sources of the reference implementation live. This repo
-# drives seethrough-torch's pipeline rather than reimplementing it, so that
-# tree has to be importable. Sibling checkout by default -- the workspace
-# manifest places both under 3-interactor/.
+# The Python sources live in this repo, at its root. Not a sibling checkout and
+# not a subtree: this repo is rooted here and carries what it runs.
 config :seethrough_pythonx,
-  torch_repo: Path.expand("../seethrough-torch", __DIR__ |> Path.dirname())
+  torch_repo: Path.expand("../python", __DIR__),
+  models_dir: Path.expand("../priv/models", __DIR__)

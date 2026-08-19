@@ -31,6 +31,7 @@ defmodule SeethroughPythonx.MixProject do
       # the whole dependency set into its priv dir at compile time, so a version
       # bump can silently change which interpreter the pipeline runs under.
       {:pythonx, "~> 0.4.10"},
+      {:jason, "~> 1.4"},
 
       # Packages the release as a single self-extracting executable.
       # NOTE: burrito cannot build on Windows -- see README. CI builds on Linux.
@@ -47,6 +48,12 @@ defmodule SeethroughPythonx.MixProject do
             linux: [os: :linux, cpu: :x86_64],
             windows: [os: :windows, cpu: :x86_64],
             macos: [os: :darwin, cpu: :aarch64]
+          ],
+          # Patch is the last phase before the Zig archiver packs the build
+          # directory. Staging later would succeed and produce a binary with
+          # the files missing.
+          extra_steps: [
+            patch: [post: [SeethroughPythonx.Burrito.StagePython]]
           ]
         ]
       ]

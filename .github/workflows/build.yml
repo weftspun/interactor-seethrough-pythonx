@@ -1,0 +1,57 @@
+name: build
+
+# Burrito does not support building ON Windows: from a Windows host the Windows
+# target is unsupported (upstream README's host/target matrix). Linux is the
+# build host for every target, including the Windows one.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27.2"
+          elixir-version: "1.18.1"
+
+      # Pinned, not "latest". Newer Zig has broken burrito builds before, and a
+      # build host that silently tracks upstream Zig turns an unrelated release
+      # into a failure here.
+      - uses: mlugg/setup-zig@v1
+        with:
+          version: 0.15.2
+
+      - name: Install archiver tooling
+        run: sudo apt-get update && sudo apt-get install -y xz-utils p7zip-full zstd
+
+      - name: Cache deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+
+      - run: mix deps.get
+
+      # Compiling runs pythonx's uv_init, which resolves and downloads the
+      # Python dependency set (~3GB of CUDA wheels) into pythonx's priv dir.
+      - run: mix compile
+        env:
+          MIX_ENV: prod
+
+      - run: mix release
+        env:
+          MIX_ENV: prod
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: burrito-binaries
+          path: burrito_out/
+          if-no-files-found: error

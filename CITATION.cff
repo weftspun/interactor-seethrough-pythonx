@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "seethrough-pythonx: See-Through layer decomposition driven from Elixir"
+abstract: >-
+  Elixir wrapper around the See-Through single-image layer decomposition
+  pipeline. Embeds CPython via pythonx and calls the reference PyTorch
+  implementation in-process, shipping as a single executable via burrito.
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/weftspun/interactor-seethrough-pythonx"
+authors:
+  - name: "weftspun"
+references:
+  - type: article
+    title: "See-Through: Single-image Layer Decomposition for Anime Characters"
+    year: 2026
+    notes: "ACM SIGGRAPH 2026 Conference Papers. The upstream pipeline this drives."

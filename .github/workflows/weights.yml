@@ -1,0 +1,27 @@
+name: package-weights
+
+# Publishes the model weight set as zstd assets on a GitHub Release.
+#
+# Weights are NOT carried inside the burrito binary: burrito gzips its payload,
+# gzip is not an acceptable archive format in this workspace, and it buys
+# almost nothing on already-dense safetensors. The binary carries the ability
+# to fetch instead. Same mechanism seethrough-ggml uses.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish weights under"
+        required: true
+        default: "v0.1.0"
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y zstd
+      - name: Fetch, compress, split, publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: scripts/package_weights.sh "${{ inputs.tag }}"

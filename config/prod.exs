@@ -1,6 +1,8 @@
 import Config
 
-# In a burrito build there is no sibling checkout: the Python sources are
-# staged into priv/ at build time. See mix.exs and the README.
+# In a release the python/ tree is staged into priv/ by the burrito build step
+# (SeethroughPythonx.Burrito.StagePython), so it travels inside the binary.
+# Weights do not -- see Weights module and README.
 config :seethrough_pythonx,
-  torch_repo: {:priv, "seethrough_torch"}
+  torch_repo: {:priv, "python"},
+  models_dir: :install_dir
