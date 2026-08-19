@@ -9,7 +9,7 @@ defmodule SeethroughPythonx do
   """
 
   @doc "Decompose `src`. See `SeethroughPythonx.Pipeline` for options."
-  defdelegate run(src, opts \ []), to: SeethroughPythonx.Server
+  defdelegate run(src, opts \\ []), to: SeethroughPythonx.Server
 
   @doc "Report the embedded interpreter's torch/CUDA/device, or an error."
   defdelegate info(), to: SeethroughPythonx.Server

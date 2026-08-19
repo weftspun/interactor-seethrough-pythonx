@@ -20,7 +20,7 @@ defmodule SeethroughPythonx.Server do
   def start_link(opts), do: GenServer.start_link(__MODULE__, opts, name: __MODULE__)
 
   @doc "Decompose an image. Blocks until the interpreter is free."
-  def run(src, opts \ []), do: GenServer.call(__MODULE__, {:run, src, opts}, @call_timeout)
+  def run(src, opts \\ []), do: GenServer.call(__MODULE__, {:run, src, opts}, @call_timeout)
 
   @doc "Environment report, or {:error, reason} if the interpreter is not usable."
   def info, do: GenServer.call(__MODULE__, :info, @call_timeout)
